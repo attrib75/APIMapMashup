@@ -1,0 +1,277 @@
+﻿@model string
+@section Scripts {
+    <!-- Javascript -->
+    <script src="~/lib/popper.min.js"></script>
+    <script src="~/lib/bootstrap/js/bootstrap.js"></script>
+
+    <script src="~/lib/jquery-rss/dist/jquery.rss.min.js"></script>
+
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mustache.js/0.7.2/mustache.min.js"></script>
+
+    <!-- custom js -->
+    <script src="~/js/main.js"></script>
+
+    <!-- Add references to the Azure Maps Map control JavaScript and CSS files. -->
+    <link rel="stylesheet" href="https://atlas.microsoft.com/sdk/javascript/mapcontrol/2/atlas.min.css" type="text/css" />
+    <script src="https://atlas.microsoft.com/sdk/javascript/mapcontrol/2/atlas.min.js"></script>
+}
+<style>
+    hr {
+        border: 0;
+        clear: both;
+        display: block;
+        width: 99%;
+        background-color: gray;
+        height: 1px;
+    }
+
+    .form-control:focus {
+        box-shadow: none;
+    }
+
+    .form-control-underlined {
+        border-width: 0;
+        border-bottom-width: 1px;
+        border-radius: 0;
+        padding-left: 0;
+    }
+
+    .form-control::placeholder {
+        font-size: 0.95rem;
+        color: #aaa;
+        font-style: italic;
+    }
+
+    .lighthr {
+        border: 0;
+        clear: both;
+        display: block;
+        width: 99%;
+        background-color: lightgray;
+        height: 1px;
+    }
+</style>
+<div class="container sections-wrapper">
+    <div class="row">
+        <div class="secondary col-lg-4 col-12">
+            <aside class="info aside section">
+                <div class="section-inner">
+                    <h2 class="heading sr-only">Basic Information</h2>
+                    <div class="content">
+                        <ul class="list-unstyled">
+
+                            <li>A mashup by Patrick Goode</li>
+                            <li><i class="fas fa-link"></i><span class="sr-only">Website:</span><a href="#">https://www.patrickgoode.com</a></li>
+                            <ul class="social list-inline">
+                                <li class="list-inline-item"><a href="https://www.twitter.com/patrickgoode"><i class="fab fa-twitter"></i></a></li>
+
+                                <li class="list-inline-item"><a href="https://www.linkedin.com/in/patrickgooode"><i class="fab fa-linkedin-in"></i></a></li>
+                                <li class="list-inline-item"><a href="https://github.com/attrib75"><i class="fab fa-github-alt"></i></a></li>
+                                <li class="list-inline-item"><a href="https://stackoverflow.com/users/1970551/patrick-goode"><i class="fab fa-stack-overflow"></i></a></li>
+                            </ul>
+                        </ul>
+                    </div><!--//content-->
+                </div><!--//section-inner-->
+            </aside><!--//aside-->
+
+            <aside class="skills aside section">
+                <div class="section-inner">
+                    <h2 class="heading">What is this?</h2>
+                    <div class="content">
+                        <p class="intro">
+                            This is a demo, a mashup of functionality found in the <a href="https://azure.microsoft.com/en-us/services/azure-maps/" target="_blank">Azure Maps</a>
+                            service and the <a href="https://azure.microsoft.com/en-us/services/cognitive-services/" target="_blank">Bing APIs within Azure Cognitive Services</a>
+                            &nbsp;There is an accompanying blog post <a href="https://wp.me/p7Fl3T-ag">here</a>.
+                        </p>
+
+                        <hr />
+                        <h5 class="subheading pt-3">Want to get the code? Feel free to clone it from Github</h5>
+                        <br />
+                        <a class="btn btn-cta-primary btn-download" href="#" target="_blank"><i class="fas fa-download"></i> Clone</a>
+                    </div><!--//content-->
+                </div><!--//section-inner-->
+            </aside><!--//section-->
+
+            <aside class="testimonials aside section">
+                <div class="section-inner">
+                    <h2 class="heading">Testimonials</h2>
+                    <div class="content">
+                        <div class="item">
+                            <blockquote class="quote">
+                                <p><i class="fas fa-quote-left"></i>This is the best demo I've ever seen!&nbsp;&nbsp;&nbsp;&nbsp;<i class="fas fa-quote-right"></i></p>
+                            </blockquote>
+                            <p class="source"><span class="name">Joe Public</span><br /><span class="title">Fake Person</span></p>
+                        </div><!--//item-->
+
+                        <p><a class="more-link" href="#"><i class="fas fa-external-link-alt"></i>More on Linkedin</a></p>
+                    </div><!--//content-->
+                </div><!--//section-inner-->
+            </aside><!--//section-->
+        </div><!--//secondary-->
+        <div class="primary col-lg-8 col-12">
+            <div id="myMap" style="position:relative;width:100%;min-width:290px;height:320px;"></div>
+
+            <section class="latest section">
+                <div class="section-inner">
+                    <div class="content">
+                        <div class="text-center" id="spinner" style="margin-bottom: 20px; margin-top: -5px;">
+                            <div class="spinner-border" role="status">
+                                <span class="sr-only">Loading...</span>
+                            </div>
+                        </div>
+                        <div class="input-group mb-4 border rounded-pill p-1" style="width: 100%; margin-bottom: 5px !important;">
+                            <input type="search" placeholder="Search the web for restaurants by name or type of food like 'Mexican' or 'Chinese'"
+                                   id="searchInput" name="searchInput" aria-describedby="button-addon3" class="form-control bg-none border-0">
+
+                            <div class="input-group-append border-0">
+                                <button id="searchButton" type="button" class="btn btn-link text-success"><i class="fa fa-search"></i></button>
+                            </div>
+
+                            <img style="height:35px; padding: 3px;" src="~/images/1600px-Bing_logo_(2016).svg.png" />
+                        </div>
+
+                        &nbsp;<a style="margin-top: -10px;" href="https://privacy.microsoft.com/en-us/privacystatement">Microsoft Privacy Statement</a>
+                        <br />
+                        <hr class="lighthr" />
+                        <div id="searchResultsDiv">
+                        </div>
+                    </div><!--//content-->
+                </div><!--//section-inner-->
+            </section><!--//section-->
+        </div><!--//primary-->
+    </div><!--//row-->
+</div><!--//masonry-->
+
+<script>
+    var map, datasource, popup;
+    $(document).ready(function () {
+
+        $("#spinner").hide();
+        GetMap();
+        //get some default results
+        SearchBusinesses('Pizza');
+
+        $("#searchButton").click(function (e) {
+            e.preventDefault();
+            SearchBusinesses($("#searchInput").val());
+        });
+    });
+
+    function SearchBusinesses(searchTerm) {
+        $("#searchResultsDiv").empty();
+
+        $("#spinner").show();
+        $.ajax({
+            type: "POST",
+            url: "/home/SearchRestaurants/",
+            data: {
+                searchInput: searchTerm,
+
+            },
+            success: function (result) {
+                $("#spinner").hide();
+                $.each(result, function (index) {
+                    console.log(result[index]);
+                    //add search results to the list
+                    $("#searchResultsDiv").append(" " +
+                        "<div class='item row'>" +
+                        "<div class='desc col-md-8 col-12'>" +
+                        "<h3 class='text-bold title'>" + result[index].name + "</h3>" +
+                        BuildUrlLink(result[index].url) +
+                        "<br>" +
+                        "<span> " + result[index].address.text  + "</span>" +
+                        "<br>" +
+                        "<a href='tel:' style='color: #7996da'>" + result[index].telephone + "</a>" +
+                        "<br>" +
+
+                        "<a href='" + result[index].webSearchUrL + "' class='arrowLink' >See more on Bing</a>" +
+                        "<br>" +
+                        "</div>" +
+                        "<hr />" +
+                        "</div>");
+
+                });
+                showResultsOnMap(result);
+            },
+            error: function (result) {
+                $("#spinner").hide();
+                alert('error: ' + result);
+            }
+        });
+    }
+
+    function BuildUrlLink(providedString) {
+        if (!providedString) {
+            return '';
+        }
+        else {
+            return "<a href='" + providedString + "' >" + providedString + "</a>";
+        }
+    }
+
+    function GetMap() {
+        //Initialize a map instance.
+        map = new atlas.Map('myMap', {
+            zoom: 2,
+            view: 'Auto',
+
+            authOptions: {
+                authType: 'subscriptionKey',
+                subscriptionKey: '@Model'
+            }
+        });
+
+        map.setCamera({
+            center: [-87.6298, 41.8781],
+            zoom: 8
+        });
+
+        //Wait until the map resources are ready.
+        map.events.add('ready', function () {
+
+            //nothing here right now, but keep this hook around in case we need it
+
+        });
+    }
+
+    function showResultsOnMap(results) {
+        map.markers.clear();
+        $.each(results, function (index) {
+            //Create an HTML marker and add it to the map.
+            var marker = new atlas.HtmlMarker({
+                color: 'DodgerBlue',
+                text: '10',
+                position: [results[index].geo.longitude, results[index].geo.latitude],
+                popup: new atlas.Popup({
+                    content: "<div style='padding:10px'>" + results[index].name + "</div>",
+                    pixelOffset: [0, -30]
+                })
+            });
+
+            map.markers.add(marker);
+
+            //Add a click event to toggle the popup.
+            map.events.add('click', marker, () => {
+                marker.togglePopup();
+            });
+        });
+
+    }
+
+    function showPopup(e) {
+        if (e.shapes && e.shapes.length > 0) {
+            var properties = e.shapes[0].getProperties();
+
+            popup.setOptions({
+                //Update the content of the popup.
+                content: atlas.PopupTemplate.applyTemplate(properties, properties.popupTemplate),
+
+                //Update the position of the popup with the pins coordinate.
+                position: e.shapes[0].getCoordinates()
+            });
+
+            //Open the popup.
+            popup.open(map);
+        }
+    }
+</script>
